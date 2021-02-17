@@ -4,7 +4,7 @@ This project showcases the ability of Material Point Method[[1]](#1) by studying
 # Code structure
 This MPM solver is written in C++ and has a grid class, a body class and a solver class. Two solid body classes with St.Venant Kirchoff and Neo-Hookean material laws respectively and a fluid body class inherits from the parent class. The bodies returns a batch of vtk files and the post-processing is performed in paraview. An API is also developed using [pybind11](https://pybind11.readthedocs.io/en/stable/basics.html) to widen the scope of postprocessing. The UML diagram for the project is shown below.
 
-![UML](README_files/ClassDiagram.PNG "UML Diagram")
+![UML](README_files/ClassDiagram.png "UML Diagram")
 
 ## Description
 
