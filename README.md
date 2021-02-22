@@ -1,6 +1,66 @@
 # Material Point Method - 2D
 This project showcases the ability of Material Point Method[[1]](#1) by studying a variety of problems in solid and fluid mechanics, which involves large deformation, contact and fluid-solid interaction. The results are also validated using benchmarks provided by literatures. Two solid model and one fluid model is implemented. The constitutive laws used for solids are the St. Venant-Kirchoff law a Neo-Hookean type elasticity. A Velocity-Verlet time integration scheme is used for temporal discretization.
 
+# Numerical Examples
+
+## 1D Spring
+
+The deformation of a damped 1D Spring is analysed and is compared with its analytical solution. A Diaplacement vs. time graph is plot, and is observed that the obtained values are closer. 
+
+<p align="center">
+  <img src="/README_files/Spring_Displacement.png" width="400" />
+</p>
+
+## 2D Truss
+A convergence study is made on a 2D truss under its self weight and the effect of Poisson's ratio on a 2D elongation is studied. The below series of images show the effect of Poisson's ratio. 
+
+<p float="left">
+  <img src="/README_files/Truss_0.png" width="300" />
+  <img src="/README_files/Truss_23.png" width="300" /> 
+  <img src="/README_files/Truss_36.png" width="300" />
+  <img src="/README_files/Truss_60.png" width="300" />
+</p>
+
+## Two Disks
+
+A analysis is made on two disks moving towards each other. This problem also gives an insight on the contact made between two bodies. The disks come into contact and they drift apart due to the generated stresses. The below set of images show the stresses generated in the disks. The scenes are taken from paraview. [[5]](#5)
+
+<p float="left">
+  <img src="/README_files/t_0.png" width="300" />
+  <img src="/README_files/t_150.png" width="300" /> 
+  <img src="/README_files/t_180.png" width="300" />
+  <img src="/README_files/t_300.png" width="300" />
+</p>
+
+## Fluid flow with barrier
+
+A liquid column initially at rest is allowed to flow under the influence of gravity only. The viscosity of the fluid is varied and its effect is studied. The below series of images show a flow behaviour of a less viscous fluid. [[3]](#3)
+
+<p float="left">
+  <img src="/README_files/Water_0.png" width="250" />
+  <img src="/README_files/Water_101.png" width="250" /> 
+  <img src="/README_files/Water_125.png" width="250" />
+</p>
+
+## Fluid Impact
+
+A drop of liquid is allowed to fall into a liquid mass initially at rest. The bulk-modulus of the fluid is varied and its effect is studied. The below series of images show a flow behaviour of a fluid with lower bulk-modulus.[[4]](#4)
+
+<p float="left">
+  <img src="/README_files/Drop_0.png" width="300" />
+  <img src="/README_files/Drop_7.png" width="300" /> 
+  <img src="/README_files/Drop_14.png" width="300" />
+  <img src="/README_files/Drop_19.png" width="300" />
+</p>
+
+# USL Algorithm
+At first, the mass, volume, velocity, force of each material point is mapped onto the respective grid nodes. Then the parameters are transformed into nodal values using shape functions. These local nodal values are assembled into the global matrices and the momentum equations are solved on the grid. The obtained nodal values are then remapped to the material points with which, the position of the material points is updated. At last, stresses are updated for each material point. The algorithm flow is shown below.
+
+<p align="center">
+  <img src="/README_files/USL_Algo_readme.png" width="400" />
+</p>
+
+
 # Code structure
 This MPM solver is written in C++ and has a grid class, a body class and a solver class. Two solid body classes with St.Venant Kirchoff and Neo-Hookean material laws respectively and a fluid body class inherits from the parent class. The bodies returns a batch of vtk files and the post-processing is performed in paraview. An API is also developed using [pybind11](https://pybind11.readthedocs.io/en/stable/basics.html) to widen the scope of postprocessing. The UML diagram for the project is shown below.
 
@@ -76,65 +136,6 @@ The below three children classes inherit from the parent body class.
 
 `MPM_STVKSolid`: Updates the stress following aforementioined constitutive law. The bulk modulus value influences the compressibiliy of the fluid.
 
-# USL Algorithm
-At first, the mass, volume, velocity, force of each material point is mapped onto the respective grid nodes. Then the parameters are transformed into nodal values using shape functions. These local nodal values are assembled into the global matrices and the momentum equations are solved on the grid. The obtained nodal values are then remapped to the material points with which, the position of the material points is updated. At last, stresses are updated for each material point. The algorithm flow is shown below.
-
-<p align="center">
-  <img src="/README_files/USL_Algo_readme.png" width="400" />
-</p>
-
-# Numerical Examples
-
-## 1D Spring
-
-The deformation of a damped 1D Spring is analysed and is compared with its analytical solution. A Diaplacement vs. time graph is plot, and is observed that the obtained values are closer. 
-
-<p align="center">
-  <img src="/README_files/Spring_Displacement.png" width="400" />
-</p>
-
-## 2D Truss
-A convergence study is made on a 2D truss under its self weight and the effect of Poisson's ratio on a 2D elongation is studied. The below series of images show the effect of Poisson's ratio. 
-
-<p float="left">
-  <img src="/README_files/Truss_0.png" width="300" />
-  <img src="/README_files/Truss_23.png" width="300" /> 
-  <img src="/README_files/Truss_36.png" width="300" />
-  <img src="/README_files/Truss_60.png" width="300" />
-</p>
-
-## Two Disks
-
-A analysis is made on two disks moving towards each other. This problem also gives an insight on the contact made between two bodies. The disks come into contact and they drift apart due to the generated stresses. The below set of images show the stresses generated in the disks. The scenes are taken from paraview.
-
-<p float="left">
-  <img src="/README_files/t_0.png" width="300" />
-  <img src="/README_files/t_150.png" width="300" /> 
-  <img src="/README_files/t_180.png" width="300" />
-  <img src="/README_files/t_300.png" width="300" />
-</p>
-
-## Fluid flow with barrier
-
-A liquid column initially at rest is allowed to flow under the influence of gravity only. The viscosity of the fluid is varied and its effect is studied. The below series of images show a flow behaviour of a less viscous fluid. [[3]](#3)
-
-<p float="left">
-  <img src="/README_files/Water_0.png" width="250" />
-  <img src="/README_files/Water_101.png" width="250" /> 
-  <img src="/README_files/Water_125.png" width="250" />
-</p>
-
-## Fluid Impact
-
-A drop of liquid is allowed to fall into a liquid mass initially at rest. The bulk-modulus of the fluid is varied and its effect is studied. The below series of images show a flow behaviour of a fluid with lower bulk-modulus.[[4]](#4)
-
-<p float="left">
-  <img src="/README_files/Drop_0.png" width="300" />
-  <img src="/README_files/Drop_7.png" width="300" /> 
-  <img src="/README_files/Drop_14.png" width="300" />
-  <img src="/README_files/Drop_19.png" width="300" />
-</p>
-
 ## References
 <a id="1">[1]</a> 
 D Sulsky, Z. Chen, and H.L. Schreyer.
@@ -155,3 +156,6 @@ Journal of Computational Physics, 231(16):5351–5373, 2012.
 L. Cueto-Fergueroso, I. Colominas, G. Mosqueira, F. Navarrina, and M. Casteleiro. 
 On the galerkin formulation of the smoothed particle hydrodynamics method. 
 International Journal for Numerical Methods in Engineering, 60(9):1475–1512, 2004.
+
+<a id="5">[5]</a> 
+https://www.researchgate.net/profile/Vinh_Phu_Nguyen/publication/262415477_Material_point_method_basics_and_applications/links/00463537ab99f084f0000000/Material-point-method-basics-and-applications.pdf
