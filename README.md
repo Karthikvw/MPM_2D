@@ -5,7 +5,7 @@ This project showcases the ability of Material Point Method[[1]](#1) by studying
 
 ## 1D Spring
 
-The deformation of a damped 1D Spring is analysed and is compared with its analytical solution. A Displacement vs. time graph is plot, and is observed that the obtained values are closer. 
+The deformation of a damped 1D Spring is analysed and is compared with its analytical solution. A Displacement vs. Time graph is plot, and is observed that the obtained values are closer. 
 
 <p align="center">
   <img src="/README_files/Spring_Displacement.png" width="400" />
