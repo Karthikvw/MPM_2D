@@ -42,6 +42,7 @@ void init_PythonMPMSolver(py::module &m)
         ,py::arg("Bodies")
         ,py::arg("NoS")
         ,py::arg("dt")
+        ,py::arg("alpha")
     );
 
     //Adding Boundary Conditions
