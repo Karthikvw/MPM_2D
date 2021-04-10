@@ -1,14 +1,15 @@
 #include<MPM_Solver.hpp>
 
-void MPM_Solver::Solve(MPM_Grid* Grid, vector<MPM_Body*> Bodies, size_t NoS, double dt)
+void MPM_Solver::Solve(MPM_Grid* Grid, vector<MPM_Body*> Bodies, size_t NoS, double dt, double alpha)
 {
-    double time = 0;                    //Time initilization
+    double time = 0;                                                    //Time initilization
     for (size_t step=0; step < NoS; step++)
     {        
         Grid -> ResetNC();                                              //Reset Grid
         for (auto &Body : Bodies) Body -> ComputeMapping(*Grid);        //Mapping values to the grid
         for (auto &Body : Bodies) Body -> ComputeRHS(*Grid);            //Assembling values to the Nodal container
-        Grid -> SolveGrid(dt);
+        Grid -> SolveGrid(dt, alpha);
+        
         //Applying BC
         vector<array<double, 2>> XI = Grid -> Grid_X();                 //Get all nodal coordinates
         for (size_t n = 0; n < (Grid -> NoNodes); n++)
@@ -24,25 +25,8 @@ void MPM_Solver::Solve(MPM_Grid* Grid, vector<MPM_Body*> Bodies, size_t NoS, dou
             }
         }
 
-    // for (size_t i = 0; i < Bodies[0]-> NoMP ; i++)
-    // {
-    //     for (size_t j = 0; j < Bodies[0]-> MPC[0].size() ; j++)
-    //     {
-    //         cout<<Bodies[0]-> MPC[i][j]<<"\t";
-    //     }
-    //     cout<<endl;                
-    // }
      for (auto &Body : Bodies) Body -> Update(*Grid, dt);               //Remapping values to particles
-
-    // for (size_t i = 0; i < Bodies[0]-> NoMP ; i++)
-    // {
-    //     for (size_t j = 0; j < Bodies[0]-> MPC[0].size() ; j++)
-    //     {
-    //         cout<<Bodies[0]-> MPC[i][j]<<"\t";
-    //     }
-    //     cout<<endl;                
-    // }
-     
+          
      time += dt;                                                        //Advance in time step
 
     }

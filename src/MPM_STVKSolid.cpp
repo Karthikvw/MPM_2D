@@ -4,12 +4,10 @@ void MPM_STVKSolid::ComputeRHS(MPM_Grid &Grid)
 /*
     Computes nodal mass vector, nodal momentum vector and nodal force vector and assembles it to Nodal container
 
-        Syntax: Compute_RHS(IDC,SHPC,NC)
+        Syntax: Compute_RHS(Grid)
 
-        IDC -> Nodal index container of the body
+        Grid -> Computational Background Grid        
 
-        SHPC -> Shape function container of the body
-        
 */
 {
     //Declaring Variables
@@ -100,9 +98,11 @@ array<array<double, 3>, 3> MPM_STVKSolid::getstress(size_t i, MPM_Grid &Grid)
 /*
         Returns the Cauchy stress for the given deformation gradient (follows STVK Material law)
 
-        Syntax: getstress(F)
+        Syntax: getstress(i, Grid)
 
-        F -> Deformation Gradient og the material point
+        i -> Material point index
+
+        Grid -> Computational Background Grid
 */
 {
     //Declaring variables
@@ -214,14 +214,6 @@ array<array<double, 3>, 3> MPM_STVKSolid::getstress(size_t i, MPM_Grid &Grid)
         }        
     }
 
-    // for (size_t i = 0; i < 3; i++)
-    // {
-    //     for (size_t j = 0; j < 3; j++)
-    //     {
-    //         Sig[i][j] = mu*J_inv*Mat[i][j] + lam*J_inv*log(J)*I[i][j];
-    //     }        
-    // }    
-
     return Sig;
 }
 
@@ -229,15 +221,11 @@ void MPM_STVKSolid::Update(MPM_Grid &Grid, double dt)
 /*
        Updates the material point parameters using USL Explicit method
 
-        Syntax: Update(IDC,SHPC,Grid,dt)
+        Syntax: Update(Grid, dt)
 
-        IDC - Nodal index container of the body
+        Grid - Computational Background Grid
 
-        SHPC - Shape function container of the body
-
-        Grid - Generated Grid
-
-        dt - time step (Choose an appropiate time step based on stability)
+        dt - time increment
 */
 {
      //Declaring Variables
@@ -246,10 +234,10 @@ void MPM_STVKSolid::Update(MPM_Grid &Grid, double dt)
      array<array<double, 3>, 3> Sig;                      //Cauchy stresses    
     
      array<double,4> SHP_mp, dSHPx_mp, dSHPy_mp;          //Shape functions, derived shape functions of ith material point
-     array<size_t,4> ID_mp;                                  //Local nodal coordinates of ith materialpoint
+     array<size_t,4> ID_mp;                               //Local nodal coordinates of ith materialpoint
      double ax_mp, ay_mp, vhx_mp, vhy_mp;                 //Acceleration and velocity of ith material point
      array<array<double, 2> ,2> F_mp, f_mp, gvh_mp, delF; //Deformation gradient, velocity gradient, Transformation matrix of ith material point
-     array<array<size_t, 2> ,2> I;                           //Identity matrix
+     array<array<size_t, 2> ,2> I;                        //Identity matrix
     
      //Resizing all declared variables
      IDC.resize(NoMP); SHPC.resize(NoMP);

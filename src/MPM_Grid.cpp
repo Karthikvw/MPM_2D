@@ -6,7 +6,7 @@ array<array<double, 2>, 4> MPM_Grid::Cell_X(array<double,2> X)
 
     Syntax: Cell_X(X)
 
-    X - Coordinates of material point
+    X - Coordinates of the material point
         
     Example: Cell_X([1,3])
 */
@@ -60,7 +60,7 @@ array<size_t,4> MPM_Grid::Cell_I(array<double,2> X)
         
     Syntax: Cell_X(X)
 
-    X - Coordinates of material point
+    X - Coordinates of the material point
         
     Example: Cell_I([1,3])
 */
@@ -134,11 +134,6 @@ array<double,12> MPM_Grid::SHP(array<double,2> X)
         a_1 = (X[0] - X_I[0][0]) * dx_inv;
         b_0 = (X_I[2][1] - X[1]) * dy_inv;
         b_1 = (X[1] - X_I[0][1]) * dy_inv;
-            
-        // da_0 = -X[0] * dx_inv;
-        // da_1 =  X[0] * dx_inv;
-        // db_0 = -X[1] * dy_inv;
-        // db_1 =  X[1] * dy_inv;
         
         da_0 = -dx_inv;
         da_1 =  dx_inv;
@@ -180,22 +175,24 @@ void MPM_Grid::ResetNC()
     }
 }
 
-void MPM_Grid::SolveGrid(double dt, double mass_cutoff)
+void MPM_Grid::SolveGrid(double dt, double alpha, double mass_cutoff)
 /*
         Solves for nodal acceleration, nodal velocity and nodal displacement and assembles to Nodal container
 
-        Syntax - Solve_grid(NC,dt,mass_cutoff = 1e-10)
+        Syntax - Solve_grid(NC, dt, alpha, mass_cutoff = 1e-10)
 
         NC - Nodal container of the Body
 
-        dt - time step
+        dt - time increment
+
+        alpha - damping coeffiecient
 
         mass_cutoff - threshold mass value to avoid mathematical instability (optional argument)
 */
 {
     NC.resize(NoNodes);
     double m_inv;
-    double alpha = 0;      //numerical damping
+    //double alpha = 25;      //numerical damping
 
     for (size_t i = 0; i < (NoNodes) ; i++)
     {
@@ -319,7 +316,6 @@ void MPM_Grid::VTKGrid(string output_file_name, size_t step)
     //Postprocessing data
     ScalarPointDataNames.push_back("Nodal_masses");
     ScalarPointData.push_back(M_I);
-    //ScalarPointData = {M_I};
     VectorPointDataNames.push_back("Nodal_momentum");
     VectorPointData.push_back(mv_I);
     VectorPointDataNames.push_back("Nodal_forces");

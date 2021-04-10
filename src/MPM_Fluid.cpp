@@ -5,12 +5,10 @@ void MPM_Fluid::ComputeRHS(MPM_Grid &Grid)
 /*
     Computes nodal mass vector, nodal momentum vector and nodal force vector and assembles it to Nodal container
 
-        Syntax: Compute_RHS(IDC,SHPC,NC)
+        Syntax: Compute_RHS(Grid)
 
-        IDC -> Nodal index container of the body
+        Grid -> Computautional Background Grid
 
-        SHPC -> Shape function container of the body
-    
 */
 {
     //Declaring Variables
@@ -98,6 +96,17 @@ void MPM_Fluid::ComputeRHS(MPM_Grid &Grid)
 }
 
 array<array<double, 3>, 3> MPM_Fluid::getstress(size_t i, MPM_Grid &Grid)
+/*
+    Get the Cauchy stresses for the ith material point
+
+    Syntax: getstress(i, Grid)
+
+    i -> material point index
+
+    Grid -> Computational Background Grid
+
+*/
+
 {
     //Declaring Variables
     array<array<double, 3>, 3> Sig;                         //Cauchy stresses
@@ -166,7 +175,6 @@ array<array<double, 3>, 3> MPM_Fluid::getstress(size_t i, MPM_Grid &Grid)
         for (size_t j = 0; j < 3; j++)
         {
             Sig[i][j] = (2*mu*devD[i][j]) - (p*I[i][j]);
-            //Sig[i][j] = (kappa*J_inv*theta*I[i][j]) + (2*mu*D[i][j]);
         }        
     }
     
@@ -177,15 +185,11 @@ void MPM_Fluid::Update(MPM_Grid &Grid, double dt)
 /*
        Updates the material point parameters using USL Explicit method
 
-        Syntax: Update(IDC,SHPC,Grid,dt)
+        Syntax: Update(Grid,dt)
 
-        IDC - Nodal index container of the body
+        Grid - Computational Background Grid
 
-        SHPC - Shape function container of the body
-
-        Grid - Generated Grid
-
-        dt - time step (Choose an appropiate time step based on stability)
+        dt - time increment
 */
 {
      //Declaring Variables
