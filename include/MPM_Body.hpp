@@ -24,7 +24,7 @@ class MPM_Body
     /*    
         Creates and initialises the Material point container(MPC), Local nodal index container(IDC) and Shape function container(SHPC)
 
-        MPV - Array of discretized material points in space containing the X and Y coordinates along with the volume per particle
+        MPV - An array containing the X and Y and volume per particle of every material points
         
         --------------------------------------------------------------
 
@@ -58,7 +58,7 @@ class MPM_Body
 
         Node 3 ->   Shape function | Derived shape function wrt X | Derived shape function wrt Y |,
 
-        Node 4 ->   Shape function | Derived shape function wrt X | Derived shape function wrt Y |.
+        Node 4 ->   Shape function | Derived shape function wrt X | Derived shape function wrt Y |
 
     */  
     {   
@@ -123,13 +123,12 @@ class MPM_Body
     public:
     array<array<double, 2>, 2> getdeformationgradient(size_t p)
     /*
-        Returns the Deformation gradient of the given material point
+        Returns the Deformation gradient of the pth material point
 
-        Syntax: getDeformationGradient(i, MPC)
+        Syntax: getDeformationGradient(p)
 
         p - Material point number (NOTE: Material point numbering starts from 0)
 
-        MPC - Material point container
     */
     {   
         array<array<double, 2>, 2> F;                       //Declaration of deformation gradient
@@ -146,7 +145,7 @@ class MPM_Body
 
         Syntax: Compute_mapping(Grid)
 
-        Grid - Generated Grid
+        Grid - Computational Background Grid
 
     */
     {   
@@ -193,6 +192,14 @@ class MPM_Body
 
     public:
     vector<double> KE(double rho)
+    /*
+        Returns the total Kinetic energy of the body
+
+        Syntax: KE(rho)
+
+        rho - Density of the body
+
+    */
     {
         vector<double> KE;
         KE.resize(NoMP);
@@ -207,6 +214,12 @@ class MPM_Body
     
     public:
     vector<double> SE()
+    /*
+        Returns the total Strain energy of the body
+
+        Syntax: SE()
+
+    */
     {
         vector<double> SE;
         SE.resize(NoMP);

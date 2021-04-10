@@ -56,7 +56,7 @@ class MPM_Grid
     void ResetNC();
 
     public:
-    void SolveGrid(double dt, double mass_cutoff = 1e-10 );
+    void SolveGrid(double dt, double alpha, double mass_cutoff = 1e-10 );
 
     public:
     vector<array<double, 2>> Grid_X();

@@ -21,7 +21,7 @@ class MPM_Solver
     MPM_Solver(){}
 
     //Solution function
-    void Solve(MPM_Grid* Grid, vector<MPM_Body*> Bodies, size_t NoS, double dt);
+    void Solve(MPM_Grid* Grid, vector<MPM_Body*> Bodies, size_t NoS, double dt, double alpha);
 
     //Boundary conditions
     public:
