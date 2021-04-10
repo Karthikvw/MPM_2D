@@ -4,7 +4,7 @@ Bench-marking 1D Spring
 Problem description: 
 Young's modulus = 1e5, Density = 1500, Poisson ratio = 0
 No. of Material points = 10
-No. of cells  = 10
+No. of cells  = 21
 Gravity = 9.81
 
 """
@@ -19,7 +19,7 @@ import MPM_2D
 #Defining the Spring
 Emod = 1e5; Density = 1500; Poisson = 0.0                                   #Material parameters
 MPV = mpm_rect([0,0.8], [0.02,0.2], [1,10],1  )
-Spring = MPM_2D.MPM_Solid(Emod, Density, Poisson, MPV)
+Spring = MPM_2D.MPM_STVKSolid(Emod, Density, Poisson, MPV)
 Spring.MPC()[:,18] = -9.81                                                  #Body force(gravity)
 
 #Defining the grid
@@ -37,12 +37,8 @@ if os.path.exists(target_directory) and os.path.isdir(target_directory):
 os.mkdir(target_directory)
 #Grid.VTKGrid("/home/karthik/cpp/mpm_2d_cpp/Spring_Benchmarking/SpringGrid", 0)
 
-#Running through time steps
-t = 0                                                                       #Start time
-T = 2.0; dt = 1e-4                                                          #Total time and time step
-NoS = int(T/dt)                                                             #Number of time steps
-
 SpringSolver = MPM_2D.MPM_Solver()                                          #Defining solver
+alpha = 15                                                                  #damping factor
 SpringSolver.addBC(lambda X: True if (X[1] >= 1.0) else False, vy=0.0)      #Boundary conditions
 
 #Running through time steps
@@ -53,7 +49,7 @@ noMicroSteps = int(100)                                                     #Inc
 noMacroSteps = int(NoS/noMicroSteps)                                        #Number of vtk files
 start_time = time.time()
 for step in range (noMacroSteps):
-    SpringSolver.Solve(Grid, [Spring], noMicroSteps, dt)
+    SpringSolver.Solve(Grid, [Spring], noMicroSteps, dt, alpha)
     Grid.VTKGrid("/home/karthik/MPM_2D/Spring_Benchmarking/SpringGrid", step)
     Spring.VTKMaterialpoints("/home/karthik/MPM_2D/Spring_Benchmarking/spring_2d", step)
 print("--- %s seconds ---" % (time.time() - start_time))

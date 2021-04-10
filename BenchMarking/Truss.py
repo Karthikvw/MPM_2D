@@ -20,7 +20,7 @@ from tqdm import tqdm, trange
 #Defining the Spring
 Emod = 1e5; Density = 1500; Poisson = 0.3                                   #Material parameters
 MPV = mpm_rect([0.06,0.12], [0.06,0.06], [9,1000],1  )
-Truss = MPM_2D.MPM_Solid(Emod, Density, Poisson, MPV)
+Truss = MPM_2D.MPM_NHolid(Emod, Density, Poisson, MPV)
 Truss.MPC()[:,18] = -1400                                                  #Body force(gravity)
 
 #Defining the grid
@@ -38,13 +38,9 @@ if os.path.exists(target_directory) and os.path.isdir(target_directory):
 os.mkdir(target_directory)
 #Grid.VTKGrid("/home/karthik/cpp/mpm_2d_cpp/Truss_Benchmarking/TrussGrid", 0)
 
-#Running through time steps
-t = 0                                                                       #Start time
-T = 0.2; dt = 1e-4                                                          #Total time and time step
-NoS = int(T/dt)                                                             #Number of time steps
-
 TrussSolver = MPM_2D.MPM_Solver()                                          #Defining solver
-TrussSolver.addBC(lambda X: True if (X[1] >= 0.18) else False, vy=0.0)      #Boundary conditions
+alpha = 25
+TrussSolver.addBC(lambda X: True if (X[1] >= 0.18) else False, vy=0.0)     #Boundary conditions
 
 #Running through time steps
 dt = 1e-4                                                                   #Time interval
@@ -54,7 +50,7 @@ noMicroSteps = int(10)                                                     #Incr
 noMacroSteps = int(NoS/noMicroSteps)                                        #Number of vtk files
 start_time = time.time()
 for step in trange (noMacroSteps):
-    TrussSolver.Solve(Grid, [Truss], noMicroSteps, dt)
+    TrussSolver.Solve(Grid, [Truss], noMicroSteps, dt, alpha)
     Grid.VTKGrid("/home/karthik/MPM_2D/Truss_Benchmarking/TrussGrid", step)
     Truss.VTKMaterialpoints("/home/karthik/MPM_2D/Truss_Benchmarking/Truss", step)
 print("--- %s seconds ---" % (time.time() - start_time))
