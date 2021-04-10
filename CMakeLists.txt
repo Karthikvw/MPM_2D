@@ -10,13 +10,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC ")
 #message("My Message: ${CMAKE_CXX_FLAGS}")
 
 #Use pybind11
+find_package (Python3 COMPONENTS Interpreter Development)
 find_package(pybind11 REQUIRED)
 
 # gather cpp files
 set(CPP_FILES main.cpp)
 
 # Set include directories
-include_directories(mpm_2d PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR} ${pybind11_INCLUDE_DIR})
+include_directories(mpm_2d PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR} ${pybind11_INCLUDE_DIR} /home/karthik/anaconda3/include/python3.8/
+)
 
 #Build MPM Library
 add_subdirectory(src)
